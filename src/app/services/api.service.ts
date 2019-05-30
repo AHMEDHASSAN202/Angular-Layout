@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, retry } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { AppError } from '../errors/app-error';
@@ -52,7 +52,23 @@ export class ApiService {
     );
   }
 
-  handle_error(error: AppError): Observable<any> {
+  create_multi_part(resource){
+    var form_data = new FormData();
+    for (const item in resource) {
+      form_data.append(item, resource[item]);
+    }
+    return this.create(form_data);
+  }
+
+  update_multi_part(resource){
+    var form_data = new FormData();
+    for (const item in resource) {
+      form_data.append(item, resource[item]);
+    }
+    return this.update(form_data);
+  }
+
+  private handle_error(error: AppError): Observable<any> {
     if (error instanceof NotFoundError)
       return throwError(NotFoundError.handle());
     else if (error instanceof BadRequestError)

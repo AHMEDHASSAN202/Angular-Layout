@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { PostService } from './services/post/post.service';
-import { AppError } from './errors/app-error';
-import { NotFoundError } from './errors/not-found-error';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +17,7 @@ export class AppComponent {
         console.log(data);
       }
     );
+    // this.postService.delete({id: 5898945}).subscribe(d => console.log(d));
   }
 
 }

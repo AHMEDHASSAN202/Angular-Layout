@@ -10,7 +10,6 @@ import { UnauthorizedError } from '../errors/unauthorized-error';
 
 
 export class HttpErrorInterceptor implements HttpInterceptor {
-    
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
             retry(1),
