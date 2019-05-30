@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, retry } from 'rxjs/operators';
-import { throwError, Observable } from 'rxjs';
 import { AppError } from '../errors/app-error';
-import { NotFoundError } from '../errors/not-found-error';
-import { BadRequestError } from '../errors/bad-request-error';
-import { UnauthorizedError } from '../errors/unauthorized-error';
+import { CustomHandleErrors } from '../errors/custom-handle-errors';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +15,16 @@ export class ApiService {
     return this.http.get(this.url).pipe(
       retry(1),
       catchError((error: AppError) => {
-        return this.handle_error(error);
+        return CustomHandleErrors.handle_error(error);
       })
     );
   }
 
-  create(resource) {
+  post(resource) {
     return this.http.post(this.url, resource).pipe(
       retry(1),
       catchError((error: AppError) => {
-        return this.handle_error(error);
+        return CustomHandleErrors.handle_error(error);
       })
     );
   }
@@ -37,7 +34,7 @@ export class ApiService {
     return this.http.patch(url, resource).pipe(
       retry(1),
       catchError((error: AppError) => {
-        return this.handle_error(error);
+        return CustomHandleErrors.handle_error(error);
       })
     );
   }
@@ -47,7 +44,7 @@ export class ApiService {
     return this.http.delete(url).pipe(
       retry(1),
       catchError((error: AppError) => {
-        return this.handle_error(error);
+        return CustomHandleErrors.handle_error(error);
       })
     );
   }
@@ -57,7 +54,7 @@ export class ApiService {
     for (const item in resource) {
       form_data.append(item, resource[item]);
     }
-    return this.create(form_data);
+    return this.post(form_data);
   }
 
   update_multi_part(resource){
@@ -66,17 +63,6 @@ export class ApiService {
       form_data.append(item, resource[item]);
     }
     return this.update(form_data);
-  }
-
-  private handle_error(error: AppError): Observable<any> {
-    if (error instanceof NotFoundError)
-      return throwError(NotFoundError.handle());
-    else if (error instanceof BadRequestError)
-      return throwError(BadRequestError.handle())
-    else if (error instanceof UnauthorizedError)
-      return throwError(UnauthorizedError.handle());  
-    else
-      return throwError(AppError.handle())
   }
 
 }

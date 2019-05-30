@@ -7,7 +7,6 @@ export class SetHeadersInterceptor implements HttpInterceptor {
             headers: new HttpHeaders({
                 'Content-Type':  'application/json',
                 'Accept':  'application/json',
-                'Authorization':  'Bearer: Test Token'
             })
         });
         return next.handle(req);
